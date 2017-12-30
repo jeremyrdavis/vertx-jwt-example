@@ -8,7 +8,6 @@
     <artifactId>vertx-jwt-example</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <dependencies>
     <properties>
         <vertx.version>3.4.2</vertx.version>
         <main.verticle>io.vertx.starter.MainVerticle</main.verticle>
@@ -37,23 +36,24 @@
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
+            <artifactId>vertx-auth-mongo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
             <artifactId>vertx-auth-jwt</artifactId>
         </dependency>
-        <!-- Test Stuff -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- Testing -->
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web-client</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12.0.redhat-2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
