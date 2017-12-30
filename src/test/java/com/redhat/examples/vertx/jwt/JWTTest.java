@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.Repeat;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +58,20 @@ public class JWTTest {
           assertEquals(VerticleMessages.PUBLIC_MESSAGE, body.toString());
           async.complete();
         });
+      }).end();
+  }
+
+  @Test
+  public void testProtectedURLIsProtected(TestContext testContext) {
+    Async async = testContext.async();
+
+    vertx.createHttpClient(new HttpClientOptions()
+      .setSsl(true).setTrustAll(true)).post(8080, "localhost", "/protected/")
+      .putHeader("content-type", "application/json")
+      .putHeader("Authorization: Token ", "")
+      .handler(response -> {
+        testContext.assertEquals(401, response.statusCode());
+        async.complete();
       }).end();
   }
 }

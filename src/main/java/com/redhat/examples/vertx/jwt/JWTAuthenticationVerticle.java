@@ -29,13 +29,12 @@ public class JWTAuthenticationVerticle extends AbstractVerticle{
             response.putHeader("content-type", "text/plain").end(VerticleMessages.PUBLIC_MESSAGE);
         });
 
-/*
         baseRouter.route("/protected").handler(JWTAuthHandler.create(jwtAuth));
         baseRouter.route("/protected").handler(routingContext -> {
             HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "text/plain").end(VerticleMessages.PROTECTED_MESSAGE);
         });
-*/
+
         vertx.createHttpServer(new HttpServerOptions()
                 .setSsl(true)
                 .setKeyStoreOptions(new JksOptions().setPath("server-keystore.jks").setPassword("secret")))
