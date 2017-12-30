@@ -2,8 +2,10 @@ package com.redhat.examples.vertx.jwt;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.After;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(VertxUnitRunner.class)
 public class JWTTest {
@@ -39,30 +42,21 @@ public class JWTTest {
   }
 
   @Test
-  public void testJWTAuthentication(TestContext testContext) {
-/*
+  public void testPublicURL(TestContext testContext) {
+
     Async async = testContext.async();
 
     vertx.createHttpClient(new HttpClientOptions()
-      .setSsl(true).setTrustAll(true)).post(8080, "localhost", "/protected")
+      .setSsl(true).setTrustAll(true)).post(8080, "localhost", "/")
       .putHeader("content-type", "application/json")
       .putHeader("Authorization: Token ", "")
       .handler(response -> {
-        testContext.assertEquals(response.statusCode(), 201);
-        testContext.assertTrue(response.headers().get("content-type").contains("application/json"));
+        testContext.assertEquals(200, response.statusCode());
+        testContext.assertEquals("text/plain", response.headers().get("content-type"));
         response.bodyHandler(body -> {
-          final User userResult = new User(body.toJsonObject().getJsonObject("user"));
-          System.out.println(userResult.toJson().toString());
-          testContext.assertEquals("username", userResult.getUsername());
-          testContext.assertEquals("user@domain.com", userResult.getEmail());
-          testContext.assertNotNull("token");
-          testContext.assertNotNull("bio");
-          testContext.assertNotNull("image");
-          testContext.assertNull(userResult.get_id());
+          assertEquals(VerticleMessages.PUBLIC_MESSAGE, body.toString());
           async.complete();
         });
       }).end();
-*/
-    assertTrue(false);
   }
 }
