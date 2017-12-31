@@ -21,7 +21,9 @@ public class JWTTest {
 
   private Vertx vertx;
 
-  private String token;
+  private String validToken;
+
+  private String invalidToken;
 
   @Before
   public void setUp(TestContext testContext) {
@@ -34,7 +36,8 @@ public class JWTTest {
       .put("path", "keystore.jceks")
       .put("password", "secret")));
 
-    token = jwtAuth.generateToken(new JsonObject().put("sub", "jeremy"), new JWTOptions());
+    validToken = jwtAuth.generateToken(new JsonObject().put("sub", "jeremy"), new JWTOptions());
+    invalidToken = validToken.substring(0, (validToken.length() - 2));
   }
 
   @After
@@ -82,7 +85,7 @@ public class JWTTest {
     vertx.createHttpClient(new HttpClientOptions()
       .setSsl(true).setTrustAll(true)).post(8080, "localhost", "/protected/")
       .putHeader("content-type", "application/json")
-      .putHeader("Authorization", "Bearer " + token)
+      .putHeader("Authorization", "Bearer " + validToken)
       .handler(response -> {
         testContext.assertEquals(200, response.statusCode());
         response.bodyHandler(body -> {
@@ -90,5 +93,20 @@ public class JWTTest {
           async.complete();
         });
       }).end();
+  }
+
+  @Test
+  public void testInvalidTokenIsUnsuccessful(TestContext testContext) {
+    Async async = testContext.async();
+
+    vertx.createHttpClient(new HttpClientOptions()
+      .setSsl(true).setTrustAll(true)).post(8080, "localhost", "/protected/")
+      .putHeader("content-type", "application/json")
+      .putHeader("Authorization", "Bearer " + invalidToken)
+      .handler(response -> {
+        testContext.assertEquals(401, response.statusCode());
+        async.complete();
+      }).end();
+
   }
 }
